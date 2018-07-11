@@ -4,6 +4,7 @@
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
 .bofa_widget th {
 	color: #fff;
 	padding: 5px;
@@ -14,14 +15,17 @@
 	line-height: 120%;
 	text-align: center;
 }
+
 .bofa_widget td {
 	padding: 5px;
 	border-bottom: 1px solid #B0C4DE;
 	border-left: 1px solid #B0C4DE;
 }
+
 .bofa_widget .money {
 	text-align: right;
 }
+
 .bofa_widget tr:nth-child(2n+1) {
 	background: #F0FFFF;
 }
