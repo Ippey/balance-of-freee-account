@@ -7,10 +7,10 @@ class Admin {
 	}
 
 	public function setUp() {
-		add_menu_page( 'Balance of Freee Account', 'Balance of Freee Account', 'manage_options', 'balance_of_freee', [
+		add_menu_page( 'Balance of Freee Account', 'Balance of Freee Account', 'manage_options', 'balance_of_freee', array(
 			$this,
 			'show'
-		] );
+		) );
 	}
 
 	public function show() {

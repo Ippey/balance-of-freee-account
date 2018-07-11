@@ -23,11 +23,11 @@ require_once( __DIR__ . '/lib/FreeeClient.php' );
 use Ippey\BalanceOfFreeAccount\Lib\DashBoard;
 
 $dashboard = new DashBoard();
-add_action( 'wp_dashboard_setup', [ $dashboard, 'setUp' ] );
+add_action( 'wp_dashboard_setup', array( $dashboard, 'setUp' ) );
 
 // Setting
 use Ippey\BalanceOfFreeAccount\Lib\Admin;
 
 $admin = new Admin();
-add_action( 'admin_menu', [ $admin, 'setUp' ] );
+add_action( 'admin_menu', array( $admin, 'setUp' ) );
 

@@ -13,10 +13,10 @@ class FreeeClient {
 		$this->clientSecret = $clientSecret;
 	}
 
-	public function getHeaders( $accessToken, $params = [] ) {
-		$headers = array_merge( [
+	public function getHeaders( $accessToken, $params = array() ) {
+		$headers = array_merge( array(
 			'Authorization' => 'Bearer ' . $accessToken
-		], $params );
+		), $params );
 
 		return $headers;
 	}
@@ -29,16 +29,16 @@ class FreeeClient {
 
 	public function getAccessToken( $code, $callbackUrl ) {
 		$url      = $this->domain . '/oauth/token';
-		$params   = [
+		$params   = array(
 			'grant_type'    => 'authorization_code',
 			'client_id'     => $this->clientId,
 			'client_secret' => $this->clientSecret,
 			'code'          => $code,
 			'redirect_uri'  => $callbackUrl,
-		];
-		$response = wp_remote_post( $url, [
+		);
+		$response = wp_remote_post( $url, array(
 			'body' => $params,
-		] );
+		) );
 
 		if ( $response instanceof \WP_Error ) {
 			return false;
@@ -62,16 +62,16 @@ class FreeeClient {
 
 	public function refreshToken( $refreshToken ) {
 		$url    = $this->domain . '/oauth/token';
-		$params = [
+		$params = array(
 			'grant_type'    => 'refresh_token',
 			'client_id'     => $this->clientId,
 			'client_secret' => $this->clientSecret,
 			'refresh_token' => $refreshToken,
-		];
+		);
 
-		$response = wp_remote_post( $url, [
+		$response = wp_remote_post( $url, array(
 			'body' => $params,
-		] );
+		) );
 
 		if ( $response instanceof \WP_Error || $response['response']['code'] != 200 ) {
 			return false;
@@ -83,10 +83,10 @@ class FreeeClient {
 
 	public function getUser( $accessToken ) {
 		$url      = $this->domain . '/api/1/users/me?companies=true';
-		$headers  = $this->getHeaders( $accessToken, [ 'Content-Type' => 'application/json' ] );
-		$response = wp_remote_get( $url, [
+		$headers  = $this->getHeaders( $accessToken, array( 'Content-Type' => 'application/json' ) );
+		$response = wp_remote_get( $url, array(
 			'headers' => $headers,
-		] );
+		) );
 
 		if ( $response instanceof \WP_Error || $response['response']['code'] != 200 ) {
 			return false;
@@ -98,15 +98,15 @@ class FreeeClient {
 
 	public function getWalletable( $accessToken, $companyId ) {
 		$url         = $this->domain . '/api/1/walletables';
-		$headers     = $this->getHeaders( $accessToken, [ 'Content-Type' => 'application/json' ] );
-		$params      = [
+		$headers     = $this->getHeaders( $accessToken, array( 'Content-Type' => 'application/json' ) );
+		$params      = array(
 			'company_id'   => $companyId,
 			'with_balance' => 'true'
-		];
+		);
 		$queryString = http_build_query( $params );
-		$response    = wp_remote_get( $url . '?' . $queryString, [
+		$response    = wp_remote_get( $url . '?' . $queryString, array(
 			'headers' => $headers,
-		] );
+		) );
 		if ( $response instanceof \WP_Error || $response['response']['code'] != 200 ) {
 			return false;
 		}

@@ -5,7 +5,7 @@ namespace Ippey\BalanceOfFreeAccount\Lib;
 
 class DashBoard {
 	public function setUp() {
-		wp_add_dashboard_widget( 'balance_of_freee_account_widget', __( 'Freee 残高' ), [ $this, 'show' ] );
+		wp_add_dashboard_widget( 'balance_of_freee_account_widget', __( 'Freee 残高' ), array( $this, 'show' ) );
 	}
 
 	public function show() {
