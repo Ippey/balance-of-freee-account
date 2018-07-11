@@ -49,6 +49,9 @@ class FreeeClient {
 	}
 
 	public function validAccessToken( $accessToken, $expire ) {
+		if ( empty( $accessToken ) ) {
+			return false;
+		}
 		$now = time();
 		if ( $now < $expire ) {
 			return true;
