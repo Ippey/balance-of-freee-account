@@ -3,7 +3,12 @@
 namespace Ippey\BalanceOfFreeAccount\Lib;
 
 class Admin {
-	public function __construct() {
+
+	/** @var FreeeClient */
+	private $freeeClient;
+
+	public function setFreeeClient( $freeeClient ) {
+		$this->freeeClient = $freeeClient;
 	}
 
 	public function setUp() {
@@ -19,7 +24,6 @@ class Admin {
 
 			return;
 		}
-		$freee        = new FreeeClient( BOFA_CLIENT_ID, BOFA_CLIENT_SECRET );
 		$accessToken  = get_option( 'bofa_access_token' );
 		$refreshToken = get_option( 'bofa_refresh_token' );
 		$linkStr      = 'Freee連携';
@@ -27,28 +31,31 @@ class Admin {
 			$linkStr = 'Freee再連携';
 		}
 		$callbackUrl = menu_page_url( 'balance_of_freee', false );
-		$url         = $freee->getAuthorizationUrl( $callbackUrl );
+		$url         = $this->freeeClient->getAuthorizationUrl( $callbackUrl );
 		$output      = <<< EOT
-<div class="wrap">
-<a href="{$url}">{$linkStr}</a>
+<div class="form-wrap">
+<a href="{$url}" class="link-text">{$linkStr}</a>
 </div>
 EOT;
 		echo $output;
 	}
 
 	public function setToken( $get ) {
-		$freee       = new FreeeClient( BOFA_CLIENT_ID, BOFA_CLIENT_SECRET );
 		$callbackUrl = menu_page_url( 'balance_of_freee', false );
-		$result      = $freee->getAccessToken( $get['code'], $callbackUrl );
-		update_option( 'bofa_access_token', $result->access_token );
-		update_option( 'bofa_refresh_token', $result->refresh_token );
-		update_option( 'bofa_expire', time() + $result->expires_in );
+		try {
+			$result = $this->freeeClient->getAccessToken( $get['code'], $callbackUrl );
+			update_option( 'bofa_access_token', $result->access_token );
+			update_option( 'bofa_refresh_token', $result->refresh_token );
+			update_option( 'bofa_expire', time() + $result->expires_in );
 
-		$output = <<< "EOT"
+			$output = <<< "EOT"
 <div class="wrap">
-Freeeとの連携が完了しました！
+<p class="message">Freeeとの連携が完了しました！</p>
 </div>
 EOT;
+		} catch ( \RuntimeException $e ) {
+			$output = '<div class="wrap"><p class="error-message">Freeeとの連携に失敗しました。再度おためしください。</p></div>';
+		}
 		echo $output;
 	}
 }

@@ -19,15 +19,22 @@ require_once( __DIR__ . '/lib/DashBoard.php' );
 require_once( __DIR__ . '/lib/Admin.php' );
 require_once( __DIR__ . '/lib/FreeeClient.php' );
 
+// FreeeClient
+use Ippey\BalanceOfFreeAccount\Lib\FreeeClient;
+
+$freeeClient = new FreeeClient( BOFA_CLIENT_ID, BOFA_CLIENT_SECRET );
+
 // DashBoard
 use Ippey\BalanceOfFreeAccount\Lib\DashBoard;
 
 $dashboard = new DashBoard();
+$dashboard->setFreeeClient( $freeeClient );
 add_action( 'wp_dashboard_setup', array( $dashboard, 'setUp' ) );
 
 // Setting
 use Ippey\BalanceOfFreeAccount\Lib\Admin;
 
 $admin = new Admin();
+$admin->setFreeeClient( $freeeClient );
 add_action( 'admin_menu', array( $admin, 'setUp' ) );
 
