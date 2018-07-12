@@ -34,7 +34,7 @@ class Admin {
 		$url         = $this->freeeClient->getAuthorizationUrl( $callbackUrl );
 		$output      = <<< EOT
 <div class="form-wrap">
-<h2>Freee 連携設定</h2>
+<h2>freee 連携設定</h2>
 <div>
 <a href="{$url}" class="button button-primary">{$linkStr}</a>
 </div>
@@ -54,12 +54,12 @@ EOT;
 			$str = __('ダッシュボードへ');
 			$output = <<< "EOT"
 <div class="wrap">
-<div class="message">Freeeとの連携が完了しました！</div>
+<div class="message">freeeとの連携が完了しました！</div>
 <a href="{$url}" class="button button-primary">{$str}</a>
 </div>
 EOT;
 		} catch ( \RuntimeException $e ) {
-			$output = '<div class="wrap"><p class="error-message">Freeeとの連携に失敗しました。再度おためしください。</p></div>';
+			$output = '<div class="wrap"><p class="error-message">freeeとの連携に失敗しました。再度おためしください。</p></div>';
 		}
 		echo $output;
 	}
