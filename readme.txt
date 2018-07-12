@@ -27,3 +27,4 @@ Please visit bellow. https://www.freee.co.jp/
 == Changelog ==
 = 0.1 =
 * Initial release.
+
