@@ -1,15 +1,15 @@
 <?php
 /**
- Plugin Name:  Balance of freee account
- Plugin URI:   https://developer.wordpress.org/plugin/balance-of-freee-account/
- Description:  Show your balance of freee account on dashboard.
- Version:      1
- Author:       Ippei Sumida
- Author URI:   https://unplat.info
- License:      GPL-2.0-or-later
- License URI:  https://www.gnu.org/licenses/gpl-2.0.html
+Plugin Name:  Balance of freee account
+Plugin URI:   https://developer.wordpress.org/plugin/balance-of-freee-account/
+Description:  Show your balance of freee account on dashboard.
+Version:      0.1
+Author:       Ippei Sumida
+Author URI:   https://unplat.info
+License:      GPL-2.0-or-later
+License URI:  https://www.gnu.org/licenses/gpl-2.0.html
 
- "Balance of freee account" is free software: you can redistribute it and/or modify
+"Balance of freee account" is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 2 of the License, or
 any later version.
