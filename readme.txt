@@ -1,6 +1,7 @@
 === Balance of freee account ===
 Contributors: ippei-sumida
 Tags: accounting, freee
+Stable Tag: trunk
 Requires at least: 4.9
 Tested up to: 4.9.6
 Requires PHP: 5.6
