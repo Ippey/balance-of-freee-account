@@ -26,15 +26,18 @@ class Admin {
 		}
 		$accessToken  = get_option( 'bofa_access_token' );
 		$refreshToken = get_option( 'bofa_refresh_token' );
-		$linkStr      = 'Freee連携';
+		$linkStr      = 'freee連携';
 		if ( $accessToken && $refreshToken ) {
-			$linkStr = 'Freee再連携';
+			$linkStr = 'freee再連携';
 		}
 		$callbackUrl = menu_page_url( 'balance_of_freee', false );
 		$url         = $this->freeeClient->getAuthorizationUrl( $callbackUrl );
 		$output      = <<< EOT
 <div class="form-wrap">
-<a href="{$url}" class="link-text">{$linkStr}</a>
+<h2>Freee 連携設定</h2>
+<div>
+<a href="{$url}" class="button button-primary">{$linkStr}</a>
+</div>
 </div>
 EOT;
 		echo $output;
@@ -47,10 +50,12 @@ EOT;
 			update_option( 'bofa_access_token', $result->access_token );
 			update_option( 'bofa_refresh_token', $result->refresh_token );
 			update_option( 'bofa_expire', time() + $result->expires_in );
-
+			$url = get_admin_url();
+			$str = __('ダッシュボードへ');
 			$output = <<< "EOT"
 <div class="wrap">
-<p class="message">Freeeとの連携が完了しました！</p>
+<div class="message">Freeeとの連携が完了しました！</div>
+<a href="{$url}" class="button button-primary">{$str}</a>
 </div>
 EOT;
 		} catch ( \RuntimeException $e ) {
