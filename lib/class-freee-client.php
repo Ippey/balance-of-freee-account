@@ -1,36 +1,34 @@
 <?php
 
-namespace Ippey\BalanceOfFreeAccount\Lib;
 
-
-class FreeeClient {
+class Freee_Client {
 	private $domain = 'https://api.freee.co.jp';
-	private $clientId;
-	private $clientSecret;
+	private $client_id;
+	private $client_secret;
 
 	/**
 	 * FreeeClient constructor.
 	 *
-	 * @param $clientId
-	 * @param $clientSecret
+	 * @param $client_id
+	 * @param $client_secret
 	 */
-	public function __construct( $clientId, $clientSecret ) {
-		$this->clientId     = $clientId;
-		$this->clientSecret = $clientSecret;
+	public function __construct( $client_id, $client_secret ) {
+		$this->client_id     = $client_id;
+		$this->client_secret = $client_secret;
 	}
 
 
 	/**
 	 * create HTTP Headers
 	 *
-	 * @param $accessToken
+	 * @param $access_token
 	 * @param array $params
 	 *
 	 * @return array
 	 */
-	public function createHeaders( $accessToken, $params = array() ) {
+	public function create_headers( $access_token, $params = array() ) {
 		$headers = array_merge( array(
-			'Authorization' => 'Bearer ' . $accessToken
+			'Authorization' => 'Bearer ' . $access_token
 		), $params );
 
 		return $headers;
@@ -39,12 +37,12 @@ class FreeeClient {
 	/**
 	 * get oauth2 authorization url
 	 *
-	 * @param $callbackUrl
+	 * @param $callback_url
 	 *
 	 * @return string
 	 */
-	public function getAuthorizationUrl( $callbackUrl ) {
-		$url = 'https://secure.freee.co.jp/oauth/authorize?client_id=' . urlencode( $this->clientId ) . '&redirect_uri=' . urlencode( $callbackUrl ) . '&response_type=code';
+	public function get_authorization_url( $callback_url ) {
+		$url = 'https://secure.freee.co.jp/oauth/authorize?client_id=' . urlencode( $this->client_id ) . '&redirect_uri=' . urlencode( $callback_url ) . '&response_type=code';
 
 		return $url;
 	}
@@ -53,24 +51,24 @@ class FreeeClient {
 	 * get access token
 	 *
 	 * @param $code
-	 * @param $callbackUrl
+	 * @param $callback_url
 	 *
 	 * @return array|mixed|object
 	 */
-	public function getAccessToken( $code, $callbackUrl ) {
+	public function get_access_token( $code, $callback_url ) {
 		$url      = $this->domain . '/oauth/token';
 		$params   = array(
 			'grant_type'    => 'authorization_code',
-			'client_id'     => $this->clientId,
-			'client_secret' => $this->clientSecret,
+			'client_id'     => $this->client_id,
+			'client_secret' => $this->client_secret,
 			'code'          => $code,
-			'redirect_uri'  => $callbackUrl,
+			'redirect_uri'  => $callback_url,
 		);
 		$response = wp_remote_post( $url, array(
 			'body' => $params,
 		) );
 
-		$this->checkResponse( $response );
+		$this->check_response( $response );
 		$json = json_decode( $response['body'] );
 
 		return $json;
@@ -79,13 +77,13 @@ class FreeeClient {
 	/**
 	 * validate access token
 	 *
-	 * @param $accessToken
+	 * @param $access_token
 	 * @param $expire
 	 *
 	 * @return bool
 	 */
-	public function validAccessToken( $accessToken, $expire ) {
-		if ( empty( $accessToken ) ) {
+	public function valid_access_token( $access_token, $expire ) {
+		if ( empty( $access_token ) ) {
 			return false;
 		}
 		$now = time();
@@ -99,24 +97,24 @@ class FreeeClient {
 	/**
 	 * refresh token
 	 *
-	 * @param $refreshToken
+	 * @param $refresh_token
 	 *
 	 * @return array|mixed|object
 	 */
-	public function refreshToken( $refreshToken ) {
+	public function refresh_token( $refresh_token ) {
 		$url    = $this->domain . '/oauth/token';
 		$params = array(
 			'grant_type'    => 'refresh_token',
-			'client_id'     => $this->clientId,
-			'client_secret' => $this->clientSecret,
-			'refresh_token' => $refreshToken,
+			'client_id'     => $this->client_id,
+			'client_secret' => $this->client_secret,
+			'refresh_token' => $refresh_token,
 		);
 
 		$response = wp_remote_post( $url, array(
 			'body' => $params,
 		) );
 
-		$this->checkResponse( $response );
+		$this->check_response( $response );
 		$json = json_decode( $response['body'] );
 
 		return $json;
@@ -125,18 +123,18 @@ class FreeeClient {
 	/**
 	 * get user
 	 *
-	 * @param $accessToken
+	 * @param $access_token
 	 *
 	 * @return mixed
 	 */
-	public function getUser( $accessToken ) {
+	public function get_user( $access_token ) {
 		$url      = $this->domain . '/api/1/users/me?companies=true';
-		$headers  = $this->createHeaders( $accessToken, array( 'Content-Type' => 'application/json' ) );
+		$headers  = $this->create_headers( $access_token, array( 'Content-Type' => 'application/json' ) );
 		$response = wp_remote_get( $url, array(
 			'headers' => $headers,
 		) );
 
-		$this->checkResponse( $response );
+		$this->check_response( $response );
 		$json = json_decode( $response['body'] );
 
 		return $json->user;
@@ -145,23 +143,23 @@ class FreeeClient {
 	/**
 	 * get walletable
 	 *
-	 * @param $accessToken
-	 * @param $companyId
+	 * @param $access_token
+	 * @param $company_id
 	 *
 	 * @return mixed
 	 */
-	public function getWalletable( $accessToken, $companyId ) {
-		$url         = $this->domain . '/api/1/walletables';
-		$headers     = $this->createHeaders( $accessToken, array( 'Content-Type' => 'application/json' ) );
-		$params      = array(
-			'company_id'   => $companyId,
+	public function get_walletable( $access_token, $company_id ) {
+		$url          = $this->domain . '/api/1/walletables';
+		$headers      = $this->create_headers( $access_token, array( 'Content-Type' => 'application/json' ) );
+		$params       = array(
+			'company_id'   => $company_id,
 			'with_balance' => 'true'
 		);
-		$queryString = http_build_query( $params );
-		$response    = wp_remote_get( $url . '?' . $queryString, array(
+		$query_string = http_build_query( $params );
+		$response     = wp_remote_get( $url . '?' . $query_string, array(
 			'headers' => $headers,
 		) );
-		$this->checkResponse( $response );
+		$this->check_response( $response );
 		$json = json_decode( $response['body'] );
 
 		return $json->walletables;
@@ -172,7 +170,7 @@ class FreeeClient {
 	 *
 	 * @return bool
 	 */
-	protected function checkResponse( $response ) {
+	protected function check_response( $response ) {
 		if ( $response instanceof \WP_Error ) {
 			throw new \RuntimeException( $response->get_error_message() );
 		} else if ( $response['response']['code'] != 200 ) {
