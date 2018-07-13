@@ -1,5 +1,6 @@
 <?php
 
+namespace Ippey\BalanceOfFreeeAccount\Lib;
 
 class Freee_Client {
 	private $domain = 'https://api.freee.co.jp';
@@ -13,10 +14,27 @@ class Freee_Client {
 	 * @param $client_secret
 	 */
 	public function __construct( $client_id, $client_secret ) {
-		$this->client_id     = $client_id;
-		$this->client_secret = $client_secret;
+		$this->set_client_id( $client_id );
+		$this->set_client_secret( $client_secret );
 	}
 
+	/**
+	 * set client_id
+	 *
+	 * @param $client_id
+	 */
+	public function set_client_id( $client_id ) {
+		$this->client_id = $client_id;
+	}
+
+	/**
+	 * set client_secret
+	 *
+	 * @param $client_secret
+	 */
+	public function set_client_secret( $client_secret ) {
+		$this->client_secret = $client_secret;
+	}
 
 	/**
 	 * create HTTP Headers

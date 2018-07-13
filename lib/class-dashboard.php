@@ -1,5 +1,6 @@
 <?php
 
+namespace Ippey\BalanceOfFreeeAccount\Lib;
 
 class Dashboard {
 
@@ -43,36 +44,18 @@ class Dashboard {
 			}
 			$user      = $this->freee_client->get_user( $access_token );
 			$companies = $user->companies;
-			$output    = '<div class="widget bofa_widget">';
 			foreach ( $companies as $company ) {
-				$output  .= '<h3>' . $company->display_name . '</h3><table><tr><th>口座</th><th>残高</th></tr>';
-				$wallets = $this->freee_client->get_walletable( $access_token, $company->id );
-				foreach ( $wallets as $wallet ) {
-					if ( $wallet->walletable_balance < 0 ) {
-						$output .= '<tr><td>' . $wallet->name . '</td><td class="money minus">' . number_format( $wallet->walletable_balance ) . '円</td></tr>';
-					} else {
-						$output .= '<tr><td>' . $wallet->name . '</td><td class="money">' . number_format( $wallet->walletable_balance ) . '円</td></tr>';
-					}
-				}
-				$output .= '</table>';
+				$wallets          = $this->freee_client->get_walletable( $access_token, $company->id );
+				$company->wallets = $wallets;
 			}
-			$output .= '</div>';
+			require_once( __DIR__ . '/view/dashboard/view.php' );
 		} catch ( \RuntimeException $e ) {
-			$output = '<div class="wrap"><p class="error-message">データの取得に失敗しました。</p></div>';
+			require_once( __DIR__ . '/view/dashboard/error.php' );
 		}
-		echo $output;
 	}
 
 	public function showNotAvailable() {
 		$setting_url = menu_page_url( 'balance_of_freee', false );
-		$output      = <<<EOT
-<div class="widget bofa_widget">
-<div class="error-div">
-<p class="error-message">freeeの設定がされていません。</p>
-<a href="{$setting_url}" class="button button-primary">freee設定画面へ</a>
-</div>
-</div>
-EOT;
-		echo $output;
+		require_once( __DIR__ . '/view/dashboard/not-available.php' );
 	}
 }

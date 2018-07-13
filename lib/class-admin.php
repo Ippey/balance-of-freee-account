@@ -1,5 +1,6 @@
 <?php
 
+namespace Ippey\BalanceOfFreeeAccount\Lib;
 
 class Admin {
 
@@ -30,52 +31,61 @@ class Admin {
 	 */
 	public function show() {
 		if ( ! empty( $_GET['code'] ) ) {
-			$this->update_token( $_GET );
+			$result = $this->update_token( $_GET );
+		} else if ( ! empty( $_POST ) && $_POST['action'] == 'update' && wp_verify_nonce( $_POST['bofa_setting_nonce'], 'bofa_setting_nonce' ) ) {
+			$this->update_client( $_POST );
+			$callback_url = menu_page_url( 'balance_of_freee', false );
+			$link_url     = $this->freee_client->get_authorization_url( $callback_url );
+			require_once( __DIR__ . '/view/admin/connect.php' );
 
 			return;
 		}
-		$access_token  = get_option( 'bofa_access_token' );
-		$refresh_token = get_option( 'bofa_refresh_token' );
-		$str           = 'freee連携';
-		if ( $access_token && $refresh_token ) {
-			$str = 'freee再連携';
-		}
-		$callback_url = menu_page_url( 'balance_of_freee', false );
-		$url          = $this->freee_client->get_authorization_url( $callback_url );
-		$output       = <<< EOT
-<div class="form-wrap">
-<h2>freee 連携設定</h2>
-<div>
-<a href="{$url}" class="button button-primary">{$str}</a>
-</div>
-</div>
-EOT;
-		echo $output;
+
+		$this->show_form( $result['status'], $result['message'] );
+	}
+
+	public function show_form( $status = '', $message = '' ) {
+		$callback_url  = menu_page_url( 'balance_of_freee', false );
+		$nonce         = wp_create_nonce( 'bofa_setting_nonce' );
+		$client_id     = get_option( 'bofa_client_id' );
+		$client_secret = get_option( 'bofa_client_secret' );
+		require_once( __DIR__ . '/view/admin/form.php' );
+	}
+
+	/**
+	 * update client_id/client_secret
+	 *
+	 * @param $post
+	 */
+	public function update_client( $post ) {
+		update_option( 'bofa_client_id', $post['client_id'] );
+		update_option( 'bofa_client_secret', $post['client_secret'] );
+		$this->freee_client->set_client_id( $post['client_id'] );
+		$this->freee_client->set_client_secret( $post['client_secret'] );
 	}
 
 	/**
 	 * Update Access/Refresh token
 	 *
 	 * @param $get
+	 *
+	 * @return array
 	 */
 	public function update_token( $get ) {
 		$callback_url = menu_page_url( 'balance_of_freee', false );
+		$result       = array();
 		try {
-			$result = $this->freee_client->get_access_token( $get['code'], $callback_url );
-			update_option( 'bofa_access_token', $result->access_token );
-			update_option( 'bofa_refresh_token', $result->refresh_token );
-			update_option( 'bofa_expire', time() + $result->expires_in );
-			$url    = get_admin_url();
-			$str    = __( 'ダッシュボードへ' );
-			$output = <<< "EOT"
-<div class="wrap">
-<div class="message">freeeとの連携が完了しました！</div>
-<a href="{$url}" class="button button-primary">{$str}</a>
-</div>
-EOT;
+			$response = $this->freee_client->get_access_token( $get['code'], $callback_url );
+			update_option( 'bofa_access_token', $response->access_token );
+			update_option( 'bofa_refresh_token', $response->refresh_token );
+			update_option( 'bofa_expire', time() + $response->expires_in );
+			$result['status']  = 'ok';
+			$result['message'] = 'freeeと連携しました。';
 		} catch ( \RuntimeException $e ) {
-			$output = '<div class="wrap"><p class="error-message">freeeとの連携に失敗しました。再度おためしください。</p></div>';
+			$result['status']  = 'ng';
+			$result['message'] = 'freeeとの連携に失敗しました。再度おためしください。';
 		}
-		echo $output;
+
+		return $result;
 	}
 }
