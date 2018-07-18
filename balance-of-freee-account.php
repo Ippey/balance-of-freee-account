@@ -26,9 +26,6 @@
  */
 
 
-define( 'BOFA_CLIENT_ID', '2527c2969cf7a97ea446ca0e3357fdd40bc8afd8812fccbe6f79b2a76803150c' );
-define( 'BOFA_CLIENT_SECRET', 'c955a36efca2beebf4e1e1193aa24b82e8788b71cb443e5eb3c190a1e500e515' );
-
 require_once( __DIR__ . '/lib/class-dashboard.php' );
 require_once( __DIR__ . '/lib/class-admin.php' );
 require_once( __DIR__ . '/lib/class-freee-client.php' );
