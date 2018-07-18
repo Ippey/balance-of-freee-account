@@ -40,6 +40,7 @@ class Dashboard {
 			if ( $this->freee_client->valid_access_token( get_option( 'bofa_access_token' ), get_option( 'bofa_expire' ) ) == false ) {
 				$result = $this->freee_client->refresh_token( $refresh_token );
 				update_option( 'bofa_access_token', $result->access_token );
+				update_option( 'bofa_refresh_token', $result->refresh_token );
 				update_option( 'bofa_expire', time() + $result->expires_in );
 			}
 			$user      = $this->freee_client->get_user( $access_token );
