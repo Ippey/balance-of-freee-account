@@ -16,9 +16,9 @@
 				<tr>
 					<td><?php echo esc_html($wallet->name) ?></td>
 					<?php if ($wallet->walletable_balance < 0) { ?>
-						<td class="money minus"><?php echo esc_html($wallet->walletable_balance) ?></td>
+						<td class="money minus"><?php echo esc_html(number_format($wallet->walletable_balance)) ?></td>
 					<?php } else { ?>
-						<td class="money"><?php echo esc_html($wallet->walletable_balance) ?></td>
+						<td class="money"><?php echo esc_html(number_format($wallet->walletable_balance)) ?></td>
 					<?php } ?>
 				</tr>
 			<?php } ?>
