@@ -16,7 +16,7 @@ freee is Japanese cloud accounting software. This plugin shows your balance of f
 == Installation ==
 1. Install the plugin through the WordPress plugins screen directly.
 1. Activate the plugin through the \'Plugins\' screen in WordPress.
-1. Use the Settings->Balance of freee account to configure the plugin
+1. Use the Settings->Balance of freee account to configure the plugin. You need to get APP_ID and APP_SECRET on freee.
 1. Access /wp-admin/
 
 
@@ -24,6 +24,10 @@ freee is Japanese cloud accounting software. This plugin shows your balance of f
 = How do I create freee\'s account? =
 You can create an account on freee.
 Please visit bellow. https://www.freee.co.jp/
+
+= How do I get APP_ID and APP_SECRET? =
+You can get on freee.
+Please visit bellow. https://secure.freee.co.jp/oauth/applications
 
 == Changelog ==
 = 0.1 =
